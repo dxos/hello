@@ -1,3 +1,5 @@
+import { PublicKey } from "@dxos/client";
+import { useClient, useShell } from "@dxos/react-client";
 import { Expando, useQuery, useSpaces } from "@dxos/react-client/echo";
 import { useIdentity } from "@dxos/react-client/halo";
 import React from "react";
@@ -6,6 +8,7 @@ export type NameTagProps = {};
 export const NameTag = (props: NameTagProps) => {
   const identity = useIdentity();
   const [space] = useSpaces();
+  const shell = useShell();
 
   const nameTags = useQuery(space, {
     expandoType: "contact",
@@ -14,6 +17,17 @@ export const NameTag = (props: NameTagProps) => {
 
   return (
     <>
+      <div>
+        <button
+          onClick={async () => {
+            void shell.shareSpace({
+              spaceKey: PublicKey.from(space?.key),
+            });
+          }}
+        >
+          invite
+        </button>
+      </div>
       {nameTags.length === 0 ? (
         <div>
           <label htmlFor="name">Name:</label>
