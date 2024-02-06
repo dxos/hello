@@ -1,11 +1,8 @@
-# hello-dxos
+# Hello
 
-This app was created with a DXOS application template.
+Interactive guestbook app for events and conferences. Generates a pretty nametag and allows you to connect with other attendees.
 
-- [x] Progressive Web App support
-- [x] React
-- [x] DXOS UI System
-- [x] Storybook
+## Run
 
 Run the app with `npm`:
 
@@ -14,11 +11,15 @@ npm install
 npm run serve
 ```
 
+## Build
+
 Build the app to the `out` folder:
 
 ```bash
 npm run build
 ```
+
+## Deploy
 
 Deploy the app to a [DXOS Kube](https://docs.dxos.org/guide/kube):
 
@@ -26,11 +27,10 @@ Deploy the app to a [DXOS Kube](https://docs.dxos.org/guide/kube):
 npm run deploy
 ```
 
+## Develop with Storybook
+
 Run storybook in this project
 
 ```bash
 npm run storybook
 ```
-
-[📚 Using ECHO with React](https://docs.dxos.org/guide/react)
-[📚 DXOS Documentation](https://docs.dxos.org)

@@ -5,11 +5,9 @@
   "private": true,
   "scripts": {
     "build": "tsc --noEmit && vite build",
-    "preview": "npm run prebuild && vite preview",
-    "serve": "npm run prebuild && vite",
-    "storybook": "start-storybook -p 9009 --no-open",
-    "gen-schema": "dxtype src/proto/schema.proto src/proto/gen/schema.ts",
-    "prebuild": "npm run gen-schema"
+    "preview": "vite preview",
+    "serve": "vite",
+    "storybook": "start-storybook -p 9009 --no-open"
   },
   "dependencies": {
     "@dxos/client": "0.4.2",

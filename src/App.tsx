@@ -1,5 +1,4 @@
 import React from "react";
-import { types } from "./proto";
 import { ClientProvider, Config, Local, Defaults } from "@dxos/react-client";
 import { ServiceWorkerToast } from "./ServiceWorkerToast";
 import { Status, ThemeProvider } from "@dxos/react-ui";
@@ -7,6 +6,7 @@ import { useRegisterSW } from "virtual:pwa-register/react";
 import { defaultTx } from "@dxos/react-ui-theme";
 import translations from "./translations";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { NameTag } from "./NameTag";
 
 const config = async () => new Config(Local(), Defaults());
 
@@ -37,7 +37,6 @@ export const App = () => {
           createWorker={createWorker}
           fallback={Loader}
           onInitialized={async (client) => {
-            client.addSchema(types);
             const searchParams = new URLSearchParams(location.search);
             if (
               !client.halo.identity.get() &&
@@ -47,8 +46,8 @@ export const App = () => {
             }
           }}
         >
-          <p>Your code goes here</p>
-          <ServiceWorkerToast {...serviceWorker} />
+          <NameTag />
+          <ServiceWorkerToast variant="needRefresh" {...serviceWorker} />
         </ClientProvider>
       </ErrorBoundary>
     </ThemeProvider>
