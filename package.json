@@ -1,0 +1,52 @@
+{
+  "name": "hello-dxos",
+  "version": "0.1.0",
+  "description": "hello-dxos - a DXOS application",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "preview": "npm run prebuild && vite preview",
+    "serve": "npm run prebuild && vite",
+    "storybook": "start-storybook -p 9009 --no-open",
+    "gen-schema": "dxtype src/proto/schema.proto src/proto/gen/schema.ts",
+    "prebuild": "npm run gen-schema"
+  },
+  "dependencies": {
+    "@dxos/client": "0.4.2",
+    "@dxos/config": "0.4.2",
+    "@dxos/shell": "0.4.2",
+    "@dxos/react-client": "0.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@dxos/react-ui": "0.4.2",
+    "@phosphor-icons/react": "^2.0.5",
+    "react-router-dom": "^6.4.0",
+    "@dxos/echo-schema": "0.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/sharedworker": "^0.0.111",
+    "typescript": "^5.0.4",
+    "vite": "^5.0.12",
+    "vite-plugin-top-level-await": "^1.4.1",
+    "vite-plugin-wasm": "^3.3.0",
+    "@types/react": "~18.0.21",
+    "@types/react-dom": "~18.0.6",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite-plugin-pwa": "^0.17.4",
+    "workbox-window": "^7.0.0",
+    "@dxos/react-ui-theme": "0.4.2",
+    "tailwindcss": "~3.2.7",
+    "autoprefixer": "^10.4.12",
+    "postcss": "^8.4.21",
+    "@storybook/addon-essentials": "8.0.0-alpha.11",
+    "@storybook/addon-interactions": "8.0.0-alpha.11",
+    "@storybook/addon-links": "8.0.0-alpha.11",
+    "@storybook/builder-vite": "8.0.0-alpha.11",
+    "@storybook/core-server": "8.0.0-alpha.11",
+    "@storybook/mdx2-csf": "^1.1.0",
+    "@storybook/react": "8.0.0-alpha.11",
+    "@storybook/react-vite": "8.0.0-alpha.11",
+    "@dxos/echo-typegen": "0.4.2"
+  }
+}
