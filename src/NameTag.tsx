@@ -8,12 +8,7 @@ import { ChromePicker } from "react-color";
 export type NameTagProps = {};
 export const NameTag = (props: NameTagProps) => {
   const identity = useIdentity();
-  const spaces = useSpaces();
-  const space = spaces.find(
-    (s) =>
-      s.key.toString() ===
-      "048907d1abe85963ae7a3aa978f68306911e63ef94e135d0524aca57e3650d0c51064f51ca43bbc433220ebf8c7e8a2cdb34609576ec68d4d54ce5618126b23689"
-  );
+  const [space] = useSpaces();
   const shell = useShell();
 
   const [nameTag] = useQuery(space, {
