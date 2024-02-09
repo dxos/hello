@@ -26,11 +26,3 @@ Deploy the app to a [DXOS Kube](https://docs.dxos.org/guide/kube):
 ```bash
 npm run deploy
 ```
-
-## Develop with Storybook
-
-Run storybook in this project
-
-```bash
-npm run storybook
-```

@@ -6,16 +6,15 @@
   "scripts": {
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "serve": "vite",
-    "storybook": "start-storybook -p 9009 --no-open"
+    "serve": "vite"
   },
   "dependencies": {
-    "@dxos/client": "0.4.3-main.1ddf290",
-    "@dxos/config": "0.4.3-main.1ddf290",
-    "@dxos/echo-schema": "0.4.3-main.1ddf290",
-    "@dxos/react-client": "0.4.3-main.1ddf290",
-    "@dxos/react-ui": "0.4.3-main.1ddf290",
-    "@dxos/shell": "0.4.3-main.1ddf290",
+    "@dxos/client": "0.4.3",
+    "@dxos/config": "0.4.3",
+    "@dxos/echo-schema": "0.4.3",
+    "@dxos/react-client": "0.4.3",
+    "@dxos/react-ui": "0.4.3",
+    "@dxos/shell": "0.4.3",
     "@phosphor-icons/react": "^2.0.5",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
@@ -23,16 +22,8 @@
     "react-router-dom": "^6.4.0"
   },
   "devDependencies": {
-    "@dxos/echo-typegen": "0.4.3-main.1ddf290",
-    "@dxos/react-ui-theme": "0.4.3-main.1ddf290",
-    "@storybook/addon-essentials": "8.0.0-alpha.11",
-    "@storybook/addon-interactions": "8.0.0-alpha.11",
-    "@storybook/addon-links": "8.0.0-alpha.11",
-    "@storybook/builder-vite": "8.0.0-alpha.11",
-    "@storybook/core-server": "8.0.0-alpha.11",
-    "@storybook/mdx2-csf": "^1.1.0",
-    "@storybook/react": "8.0.0-alpha.11",
-    "@storybook/react-vite": "8.0.0-alpha.11",
+    "@dxos/echo-typegen": "0.4.3",
+    "@dxos/react-ui-theme": "0.4.3",
     "@types/node": "^18.11.9",
     "@types/react": "~18.0.21",
     "@types/react-dom": "~18.0.6",
