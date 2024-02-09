@@ -4,6 +4,29 @@ import { Expando, useQuery, useSpaces } from "@dxos/react-client/echo";
 import { useIdentity } from "@dxos/react-client/halo";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
+import * as S from "@effect/schema/Schema";
+import * as Either from "effect/Either";
+
+// -- Schema -----------------------------------------------------
+
+const Contact = S.struct({
+  name: S.string,
+  email: S.string.pipe(
+    S.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)
+  ),
+});
+
+interface Contact extends S.Schema.To<typeof Contact> {}
+
+const NameTagSchema = S.struct({
+  emoji: S.string,
+  color: S.string,
+  contact: Contact,
+});
+
+interface NameTagSchema extends S.Schema.To<typeof NameTagSchema> {}
+
+// -- React Components -------------------------------------------
 
 export type NameTagProps = {};
 export const NameTag = (props: NameTagProps) => {
@@ -33,15 +56,27 @@ export const NameTag = (props: NameTagProps) => {
     emoji: string,
     color: string
   ) => {
+    // validate the contact with effect/schema
+    // probably use `S.is` instead: https://github.com/effect-ts/effect/tree/main/packages/schema#assertions
+    const parseContact = S.decodeUnknownEither(Contact);
+    const contactInput: unknown = { name, email };
+    const parseContactResult = parseContact(contactInput);
+    if (Either.isLeft(parseContactResult)) {
+      console.log("Invalid contact input", parseContactResult.left);
+      return;
+    }
+
+    // validate the nameTag with effect/schema
+    // probably use `S.is` instead: https://github.com/effect-ts/effect/tree/main/packages/schema#assertions
+    const parseNameTag = S.decodeUnknownEither(NameTagSchema);
+    const nameTagInput: unknown = { emoji, color };
+    const parseNameTagResult = parseNameTag(nameTagInput);
+    if (Either.isLeft(parseNameTagResult)) {
+      console.log("Invalid nameTag input", parseNameTagResult.left);
+      return;
+    }
+
     // create an effect/schema object instead of expando
-    // the format should be something like this:
-    // Contact:
-    //  name: string
-    //  email: string
-    // NameTag:
-    //  emoji: string
-    //  color: string
-    //  contact: Contact
     const contact = new Expando({
       expandoType: "contact",
       name: name,
@@ -97,11 +132,11 @@ export const NameTag = (props: NameTagProps) => {
             name="email"
             value={email}
             onChange={(e) => {
-              if (validateEmail(e.target.value)) {
-                setEmail(e.target.value);
-              } else {
-                // do something? show an error in the UI?
-              }
+              // if (validateEmail(e.target.value)) {
+              setEmail(e.target.value);
+              // } else {
+              // do something? show an error in the UI?
+              // }
             }}
             required
           />
