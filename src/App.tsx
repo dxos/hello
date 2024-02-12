@@ -6,12 +6,6 @@ import {
   Defaults,
   useShell,
 } from "@dxos/react-client";
-import { ServiceWorkerToast } from "./ServiceWorkerToast";
-import { Status, ThemeProvider } from "@dxos/react-ui";
-import { useRegisterSW } from "virtual:pwa-register/react";
-import { defaultTx } from "@dxos/react-ui-theme";
-import translations from "./translations";
-import { ErrorBoundary } from "./ErrorBoundary";
 import { NameTag } from "./NameTag";
 import { useSpace } from "@dxos/react-client/echo";
 import {
@@ -29,12 +23,6 @@ const createWorker = () =>
     type: "module",
     name: "dxos-client-worker",
   });
-
-const Loader = () => (
-  <div className="flex bs-[100dvh] justify-center items-center">
-    <Status indeterminate aria-label="Initializing" />
-  </div>
-);
 
 export const Home = () => {
   const space = useSpace();
@@ -79,34 +67,22 @@ const router = createBrowserRouter([
 ]);
 
 export const App = () => {
-  const serviceWorker = useRegisterSW();
   return (
-    <ThemeProvider
-      appNs="hello-dxos"
-      tx={defaultTx}
-      resourceExtensions={translations}
-      fallback={<Loader />}
+    <ClientProvider
+      config={config}
+      createWorker={createWorker}
+      shell="./shell.html"
+      onInitialized={async (client) => {
+        const searchParams = new URLSearchParams(location.search);
+        if (
+          !client.halo.identity.get() &&
+          !searchParams.has("deviceInvitationCode")
+        ) {
+          await client.halo.createIdentity();
+        }
+      }}
     >
-      <ErrorBoundary>
-        <ClientProvider
-          config={config}
-          createWorker={createWorker}
-          fallback={Loader}
-          shell="./shell.html"
-          onInitialized={async (client) => {
-            const searchParams = new URLSearchParams(location.search);
-            if (
-              !client.halo.identity.get() &&
-              !searchParams.has("deviceInvitationCode")
-            ) {
-              await client.halo.createIdentity();
-            }
-          }}
-        >
-          <RouterProvider router={router} />
-          <ServiceWorkerToast variant="needRefresh" {...serviceWorker} />
-        </ClientProvider>
-      </ErrorBoundary>
-    </ThemeProvider>
+      <RouterProvider router={router} />
+    </ClientProvider>
   );
 };
