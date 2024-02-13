@@ -1,5 +1,5 @@
 import { Expando, Schema, useQuery, useSpace } from "@dxos/react-client/echo";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { NameTag } from "./NameTag";
 import { PublicKey, useShell } from "@dxos/react-client";
@@ -9,16 +9,6 @@ import { ContactList } from "./ContactList";
 // -- ECHO schema ------------------------------------------------
 
 const CONTACT_TYPENAME = "dxos.org.contact";
-
-const ContactType = new Schema({
-  typename: CONTACT_TYPENAME,
-  props: [
-    { id: "name", type: Schema.PropType.STRING },
-    { id: "email", type: Schema.PropType.STRING }, // TODO: change to organization
-    { id: "emoji", type: Schema.PropType.STRING },
-    { id: "color", type: Schema.PropType.STRING },
-  ],
-});
 
 export type ContactProps = {
   name: "string";
@@ -35,39 +25,38 @@ export const Event = () => {
   const space = useSpace(spaceKey);
   const shell = useShell();
 
-  // Add the schema to the space if it doesn't exist
-  useEffect(() => {
-    const checkAndAddSchema = async () => {
-      const existingSchemas = space?.db.query(
-        (object) => object.__typename === CONTACT_TYPENAME
-      );
-      if (existingSchemas.objects.length === 0) {
-        space?.db.add(ContactType);
-      }
-    };
-    checkAndAddSchema();
-  }, [space]);
-
   // Fetch the contacts objects
   const allContacts = useQuery(
     space,
     (object) => object.__typename == CONTACT_TYPENAME
   );
-
-  const [myContact, setMyContact] = useState<Expando | undefined>();
-  const [otherContacts, setOtherContacts] = useState<Expando[] | undefined>();
-  useEffect(() => {
-    if (identity?.identityKey) {
-      setMyContact(
-        allContacts.find((contact) => contact.identity === identityKeyString)
-      );
-      setOtherContacts(
-        allContacts.filter((contact) => contact.identity !== identityKeyString)
-      );
-    }
-  }, [allContacts]);
+  const otherContacts = allContacts.filter(
+    (contact) => contact.identity !== identityKeyString
+  );
 
   const handleAddContact = (contact: ContactProps) => {
+    const existingSchemas = space?.db.query(
+      (object) => object.typename === CONTACT_TYPENAME
+    );
+
+    let contactSchema;
+
+    if (existingSchemas.objects.length === 0) {
+      contactSchema = new Schema({
+        typename: CONTACT_TYPENAME,
+        props: [
+          { id: "name", type: Schema.PropType.STRING },
+          { id: "email", type: Schema.PropType.STRING }, // TODO: change to organization
+          { id: "emoji", type: Schema.PropType.STRING },
+          { id: "color", type: Schema.PropType.STRING },
+        ],
+      });
+
+      space?.db.add(contactSchema);
+    } else {
+      contactSchema = existingSchemas.objects[0];
+    }
+
     const contactObj = new Expando(
       {
         name: contact.name,
@@ -76,7 +65,7 @@ export const Event = () => {
         color: contact.color,
         identity: identity?.identityKey.toString(),
       },
-      { schema: ContactType }
+      { schema: contactSchema }
     );
 
     space?.db.add(contactObj);
@@ -93,7 +82,12 @@ export const Event = () => {
       >
         invite
       </button>
-      <NameTag contact={myContact} handleAdd={handleAddContact} />
+      <NameTag
+        contact={allContacts.find(
+          (contact) => contact.identity === identityKeyString
+        )}
+        handleAdd={handleAddContact}
+      />
 
       {otherContacts && <ContactList contacts={otherContacts} />}
       <div>
