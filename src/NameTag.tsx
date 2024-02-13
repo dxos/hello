@@ -1,70 +1,23 @@
-import { PublicKey } from "@dxos/client";
-import { useShell } from "@dxos/react-client";
-import { Expando, Schema, useQuery, useSpaces } from "@dxos/react-client/echo";
-import { useIdentity } from "@dxos/react-client/halo";
+import { Expando } from "@dxos/echo-schema";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
-
-// -- Echo schema ------------------------------------------------
-
-const CONTACT_TYPENAME = "dxos.org.contact";
-
-const ContactType = new Schema({
-  typename: CONTACT_TYPENAME,
-  props: [
-    { id: "name", type: Schema.PropType.STRING },
-    { id: "email", type: Schema.PropType.STRING }, // TODO: change to organization
-    { id: "emoji", type: Schema.PropType.STRING },
-    { id: "color", type: Schema.PropType.STRING },
-  ],
-});
+import { ContactProps } from "./Event";
 
 // -- React Components -------------------------------------------
 
-export type NameTagProps = {};
-export const NameTag = (props: NameTagProps) => {
-  const identity = useIdentity();
-  const [space] = useSpaces();
-  const shell = useShell();
+export type NameTagProps = {
+  contact: Expando;
+  handleAdd: (contact: ContactProps) => void;
+};
+export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
+  const nameTag = contact;
+  const handleAddContact = handleAdd;
 
-  const [nameTag] = useQuery(space, {
-    identity: identity?.identityKey.toString(),
-  });
   const [name, setName] = useState(nameTag ? nameTag.name : "");
   const [email, setEmail] = useState(nameTag ? nameTag.email : "");
   const [emoji, setEmoji] = useState(nameTag ? nameTag.emoji : "");
   const [color, setColor] = useState(nameTag ? nameTag.color : "#000000");
   const [editMode, setEditMode] = useState(false);
-
-  // fetch all nametags from the database
-  const otherNameTags = useQuery(
-    space,
-    (object) => object.__typename == CONTACT_TYPENAME
-  );
-
-  // do this with effect/schema
-  const createNameTag = async (
-    name: string,
-    email: string,
-    emoji: string,
-    color: string
-  ) => {
-    // TODO: Check to see if the schema is already in the space
-    space?.db.add(ContactType);
-
-    const contact = new Expando(
-      {
-        name: name,
-        email: email,
-        emoji: emoji,
-        color: color,
-        identity: identity?.identityKey.toString(),
-      },
-      { schema: ContactType }
-    );
-
-    space?.db.add(contact);
-  };
 
   const validateEmoji = (emoji: string) => {
     return emoji.match(
@@ -74,17 +27,7 @@ export const NameTag = (props: NameTagProps) => {
 
   return (
     <>
-      <div>
-        <button
-          onClick={async () => {
-            void shell.shareSpace({
-              spaceKey: PublicKey.from(space?.key),
-            });
-          }}
-        >
-          invite
-        </button>
-      </div>
+      <div></div>
       {editMode || !nameTag ? (
         <div>
           <label htmlFor="name">Name:</label>
@@ -133,7 +76,12 @@ export const NameTag = (props: NameTagProps) => {
                 nameTag.emoji = emoji;
                 nameTag.color = color;
               } else {
-                createNameTag(name, email, emoji, color);
+                handleAddContact({
+                  name: name,
+                  email: email,
+                  emoji: emoji,
+                  color: color,
+                });
               }
               setEditMode(false);
             }}
@@ -168,39 +116,6 @@ export const NameTag = (props: NameTagProps) => {
           </button>
         </div>
       )}
-      {otherNameTags.length > 0 && (
-        <div>
-          <h2 className="font-bold underline mt-5">Other Name Tags</h2>
-          <ul>
-            {otherNameTags.map(
-              (nt) =>
-                nt.identity !== identity?.identityKey.toString() && (
-                  <li key={nt.identity} className="flex items-center">
-                    <div
-                      className="h-6 w-6 rounded-full mr-2 flex items-center justify-center"
-                      style={{ backgroundColor: nt.color }}
-                    >
-                      <span className="text-white">{nt.emoji}</span>
-                    </div>
-                    <span>
-                      {nt.name} - {nt.email}
-                    </span>
-                  </li>
-                )
-            )}
-          </ul>
-        </div>
-      )}
-
-      <div>
-        <button
-          onClick={async () => {
-            void shell.shareIdentity();
-          }}
-        >
-          link
-        </button>
-      </div>
     </>
   );
 };

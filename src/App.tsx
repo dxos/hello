@@ -6,7 +6,6 @@ import {
   Defaults,
   useShell,
 } from "@dxos/react-client";
-import { NameTag } from "./NameTag";
 import { useSpace } from "@dxos/react-client/echo";
 import {
   Navigate,
@@ -15,6 +14,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { Event } from "./Event";
 
 const config = async () => new Config(Local(), Defaults());
 
@@ -58,7 +58,7 @@ export const Home = () => {
 const router = createBrowserRouter([
   {
     path: "/space/:spaceKey",
-    element: <NameTag />,
+    element: <Event />,
   },
   {
     path: "/",
