@@ -95,16 +95,16 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
           <div
             className="rounded-lg border-4 p-4 mx-4 my-4 max-w-lg"
             style={{
-              backgroundColor: nameTag.color,
-              borderColor: nameTag.color,
+              backgroundColor: color,
+              borderColor: color,
             }}
           >
             <p className="text-2xl text-white">Hello, my name is...</p>
             <div className="flex items-center bg-white rounded-lg p-4">
-              <p className="text-4xl mr-4">{nameTag.emoji}</p>
+              <p className="text-4xl mr-4">{emoji}</p>
               <div>
-                <p className="text-3xl">Name: {nameTag.name}</p>
-                <p className="text-2xl">Email: {nameTag.email}</p>
+                <p className="text-3xl">Name: {name}</p>
+                <p className="text-2xl">Email: {email}</p>
               </div>
             </div>
           </div>
