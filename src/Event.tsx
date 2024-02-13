@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { NameTag } from "./NameTag";
 import { PublicKey, useShell } from "@dxos/react-client";
 import { useIdentity } from "@dxos/react-client/halo";
+import { ContactList } from "./ContactList";
 
 // -- ECHO schema ------------------------------------------------
 
@@ -93,6 +94,8 @@ export const Event = () => {
         invite
       </button>
       <NameTag contact={myContact} handleAdd={handleAddContact} />
+
+      {otherContacts && <ContactList contacts={otherContacts} />}
       <div>
         <button
           onClick={async () => {
