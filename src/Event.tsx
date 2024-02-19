@@ -23,6 +23,11 @@ export const Event = () => {
   const identity = useIdentity();
   const identityKeyString = identity.identityKey.toString();
   const space = useSpace(spaceKey);
+
+  if (!space) {
+    console.log("WARNING: space not found!");
+  }
+
   const shell = useShell();
 
   // Fetch the contacts objects
@@ -34,14 +39,16 @@ export const Event = () => {
     (contact) => contact.identity !== identityKeyString
   );
 
-  const handleAddContact = (contact: ContactProps) => {
+  const handleAddContact = async (contact: ContactProps) => {
+    // Check to see if schema exists in the database
     const existingSchemas = space?.db.query(
       (object) => object.typename === CONTACT_TYPENAME
     );
 
     let contactSchema;
 
-    if (existingSchemas.objects.length === 0) {
+    if (!existingSchemas || existingSchemas.objects.length === 0) {
+      console.log("no schema found, creating new one");
       contactSchema = new Schema({
         typename: CONTACT_TYPENAME,
         props: [
@@ -54,6 +61,7 @@ export const Event = () => {
 
       space?.db.add(contactSchema);
     } else {
+      console.log("schema found, using existing one");
       contactSchema = existingSchemas.objects[0];
     }
 
@@ -68,6 +76,7 @@ export const Event = () => {
       { schema: contactSchema }
     );
 
+    console.log("adding contact to space", contactObj);
     space?.db.add(contactObj);
   };
 

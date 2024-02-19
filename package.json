@@ -9,11 +9,11 @@
     "serve": "vite"
   },
   "dependencies": {
-    "@dxos/client": "0.4.3",
-    "@dxos/config": "0.4.3",
-    "@dxos/echo-schema": "0.4.3",
-    "@dxos/react-client": "0.4.3",
-    "@dxos/shell": "0.4.3",
+    "@dxos/client": "0.4.4",
+    "@dxos/config": "0.4.4",
+    "@dxos/echo-schema": "0.4.4",
+    "@dxos/react-client": "0.4.4",
+    "@dxos/shell": "0.4.4",
     "@effect/schema": "^0.62.1",
     "@phosphor-icons/react": "^2.0.5",
     "react": "^18.2.0",
