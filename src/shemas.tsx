@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // const contactSchema = {
 //   name: S.string,
 //   email: S.string.pipe(
@@ -14,6 +16,101 @@ import * as S from "@effect/schema/Schema";
 export const Organization = S.struct({});
 export const echoObject = (identifier: string): S => {};
 
+const E = {
+  echoObject:
+    (dxn: string, version: string) =>
+    <T,>(x: T) =>
+      x,
+};
+
+// =====================================================
+
+// ==== Defining a schema
+
+import * as S from "@effect/schema/Schema";
+import * as E from "@dxos/echo-schema";
+
+export const Contact = S.struct({
+  name: S.string,
+  email: S.string,
+  emoji: S.string,
+  color: S.string,
+}).pipe(
+  // Give the schema a unique name and version
+  E.echoObject("dxos.types.contact", "0.1.0")
+);
+
+// ==== Schema with Validations
+
+import * as E from "@dxos/echo-schema";
+
+const EMOJI_REGEX = /.+/u;
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+export const Contact = S.struct({
+  name: S.string,
+  email: S.string.pipe(S.pattern(EMAIL_REGEX)),
+  color: S.string,
+  emoji: S.string,
+}).pipe(
+  // Give the schema a unique name and version
+  E.echoObject("dxos.types.contact", "0.1.0")
+);
+
+// ----
+
+// E.Schema adds the ECHO fields to the type
+export type Contact = E.Schema.To<typeof Contact>;
+
+// -----
+
+// People using Effect Schema for API validation:
+// data comes in from an API and they get a plain object and then they persist it
+// it's validating data transfer
+// you don't keep the object around to use later
+// when creating an echo object, the object is a mutable, reactive object
+// it's persisted to ECHO
+
+// Create a contact object and add it to ECHO
+const contact = space.db.add(Contact, {
+  name: "John Doe",
+  email: "john@doe.org",
+  color: "#FF0000",
+  emoji: "👍",
+});
+
+// this creates a mutation which is automatically replicated
+// it's both a database object (wrapping the object in the db, like an ORM)
+//     database is backed by automerge and it's a CRDT
+//     changes are synced across all other devices
+
+// directly mutate the object, triggering replication
+contact.email = "johndoe@altavista.com";
+
+// it's ALSO used as the UI state to handle rendering components from it
+//     it's a reactive object via signals
+//     we (will) support integration with many different signals libraries (pluggable), currently preact/signa
+// NOTICE how there are no subscriptions required: Card comp. will automatically re-render when the contact object changes
+
+// Card re-renders when contact changes
+const Card = ({ contact }) => <span>{contact.name}</span>;
+
+// ---------- Validation
+
+contact.email = "NOT_AN_EMAIL"; // 🔥 throws a ParseError
+
+E.validate(contact, "email", newValue); // Ok or ParseError
+/*
+Parsing failed:
+{ email: "NOT_AN_EMAIL" }
+└─ ["email"]
+   └─ does not match patterns
+*/
+
+<Input obj={contact} field="email" />;
+
+// ----------
 export const Contact = S.struct({
   name: S.string.pipe(S.required),
   organization: S.string,
@@ -94,6 +191,9 @@ getSchema(contact); // => Contact -- effect schema instance
 query(space, Contact, {}, {});
 
 // -- Schema introspection -------------------------
+
+const contactSchema = E.schemaOf(contact);
+// returns schema of type "dxos.types.contact"
 
 /*
 
