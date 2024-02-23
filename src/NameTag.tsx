@@ -16,8 +16,9 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
   const [name, setName] = useState(nameTag ? nameTag.name : "");
   const [email, setEmail] = useState(nameTag ? nameTag.email : "");
   const [emoji, setEmoji] = useState(nameTag ? nameTag.emoji : "");
-  const [color, setColor] = useState(nameTag ? nameTag.color : "#000000");
+  const [color, setColor] = useState(nameTag ? nameTag.color : "#FFFFFF");
   const [editMode, setEditMode] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   const validateEmoji = (emoji: string) => {
     return emoji.match(
@@ -27,30 +28,31 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
 
   return (
     <>
-      <div></div>
       {editMode || !nameTag ? (
         <div>
-          <label htmlFor="name">Name:</label>
           <input
             type="text"
+            placeholder="Name"
             id="name"
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            className="block w-full p-2 mt-2 rounded-lg border-4 border-blue-500"
           />
-          <label htmlFor="email">Email:</label>
           <input
             type="email"
+            placeholder="Email"
             id="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="block w-full p-2 mt-2 rounded-lg border-4 border-blue-500"
           />
-          <label htmlFor="emoji">Emoji:</label>
           <input
             type="text"
+            placeholder="Favorite emoji"
             id="emoji"
             name="emoji"
             value={emoji}
@@ -62,12 +64,28 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
               }
             }}
             required
+            className="block w-full p-2 mt-2 rounded-lg border-4 border-blue-500"
           />
-          <label htmlFor="color">Color:</label>
-          <ChromePicker
-            color={color}
-            onChange={(color) => setColor(color.hex)}
+          <div
+            className="inline-block p-2 mt-2 rounded-lg border-4 border-blue-500"
+            style={{ backgroundColor: color }}
+            onClick={() => setShowColorPicker(!showColorPicker)}
+          ></div>
+          <input
+            type="text"
+            placeholder="Favorite color, in hex"
+            id="color"
+            name="color"
+            value={color}
+            className="inline-block w-full p-2 mt-2 rounded-lg border-4 border-blue-500"
+            onClick={() => setShowColorPicker(true)}
           />
+          {showColorPicker && (
+            <ChromePicker
+              color={color}
+              onChange={(color) => setColor(color.hex)}
+            />
+          )}
           <button
             onClick={() => {
               if (nameTag) {
@@ -85,10 +103,16 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
               }
               setEditMode(false);
             }}
+            className="mt-2 mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Submit
           </button>
-          <button onClick={() => setEditMode(false)}>Cancel</button>
+          <button
+            onClick={() => setEditMode(false)}
+            className="mt-2 mr-4 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Cancel
+          </button>
         </div>
       ) : (
         <div>
@@ -99,12 +123,12 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
               borderColor: nameTag.color,
             }}
           >
-            <p className="text-2xl text-white">Hello, my name is...</p>
+            <p className="text-2xl text-black mb-4">Hello, my name is...</p>
             <div className="flex items-center bg-white rounded-lg p-4">
-              <p className="text-4xl mr-4">{nameTag.emoji}</p>
+              <p className="text-4xl mr-6">{nameTag.emoji}</p>
               <div>
-                <p className="text-3xl">Name: {nameTag.name}</p>
-                <p className="text-2xl">Email: {nameTag.email}</p>
+                <p className="text-3xl">{nameTag.name}</p>
+                <p className="text-2xl">{nameTag.email}</p>
               </div>
             </div>
           </div>
