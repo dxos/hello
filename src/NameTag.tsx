@@ -86,44 +86,46 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
               onChange={(color) => setColor(color.hex)}
             />
           )}
-          <button
-            onClick={() => {
-              if (nameTag) {
-                nameTag.name = name;
-                nameTag.email = email;
-                nameTag.emoji = emoji;
-                nameTag.color = color;
-              } else {
-                handleAddContact({
-                  name: name,
-                  email: email,
-                  emoji: emoji,
-                  color: color,
-                });
-              }
-              setEditMode(false);
-            }}
-            className="mt-2 mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Submit
-          </button>
-          <button
-            onClick={() => setEditMode(false)}
-            className="mt-2 mr-4 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Cancel
-          </button>
+          <div className="flex justify-center">
+            <button
+              onClick={() => {
+                if (nameTag) {
+                  nameTag.name = name;
+                  nameTag.email = email;
+                  nameTag.emoji = emoji;
+                  nameTag.color = color;
+                } else {
+                  handleAddContact({
+                    name: name,
+                    email: email,
+                    emoji: emoji,
+                    color: color,
+                  });
+                }
+                setEditMode(false);
+              }}
+              className="mt-2 mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => setEditMode(false)}
+              className="mt-2 mr-4 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       ) : (
         <div>
           <div
-            className="rounded-lg border-4 p-4 mx-4 my-4 max-w-lg"
+            className="rounded-lg border-4 p-4 mt-4 mb-2 max-w-lg"
             style={{
               backgroundColor: nameTag.color,
               borderColor: nameTag.color,
             }}
           >
-            <p className="text-2xl text-black mb-4">Hello, my name is...</p>
+            <p className="text-2xl text-black mb-2">Hello, my name is...</p>
             <div className="flex items-center bg-white rounded-lg p-4">
               <p className="text-4xl mr-6">{nameTag.emoji}</p>
               <div>
@@ -132,12 +134,14 @@ export const NameTag = ({ contact, handleAdd }: NameTagProps) => {
               </div>
             </div>
           </div>
-          <button
-            className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setEditMode(true)}
-          >
-            Edit
-          </button>
+          <div className="flex justify-center">
+            <button
+              className="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => setEditMode(true)}
+            >
+              Edit
+            </button>
+          </div>
         </div>
       )}
     </>

@@ -81,35 +81,52 @@ export const Event = () => {
   };
 
   return (
-    <div className="max-w-screen-sm mx-auto mt-2">
-      <button
-        onClick={async () => {
-          void shell.shareSpace({
-            spaceKey: PublicKey.from(space?.key),
-          });
-        }}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Invite
-      </button>
-      <NameTag
-        contact={allContacts.find(
-          (contact) => contact.identity === identityKeyString
-        )}
-        handleAdd={handleAddContact}
-      />
-
-      {otherContacts && <ContactList contacts={otherContacts} />}
-      <div>
-        <button
-          onClick={async () => {
-            void shell.shareIdentity();
-          }}
-          className="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Manage device
-        </button>
+    <div>
+      <div className="text-center border-b-2 my-2 pb-2 relative">
+        <h1 className="inline-block text-lg font-semibold text-blue-500">
+          hello
+        </h1>
+        <span className="text-black font-light">
+          &nbsp;from&nbsp;
+          <a href="https://dxos.org" className="text-black hover:text-blue-500">
+            DXOS
+          </a>
+        </span>
+        <div className="inline absolute right-0 pr-2">
+          <button
+            onClick={async () => {
+              void shell.shareSpace({
+                spaceKey: PublicKey.from(space?.key),
+              });
+            }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded mx-2"
+          >
+            Invite
+          </button>
+          <button
+            onClick={async () => {
+              void shell.shareIdentity();
+            }}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-sm rounded"
+          >
+            ⚙
+          </button>
+        </div>
       </div>
+      <div className="max-w-screen-sm mx-auto mt-2 px-2">
+        <NameTag
+          contact={allContacts.find(
+            (contact) => contact.identity === identityKeyString
+          )}
+          handleAdd={handleAddContact}
+        />
+      </div>
+
+      {otherContacts && otherContacts.length > 0 ? (
+        <div className="max-w-screen-sm mx-auto mt-2 px-2">
+          <ContactList contacts={otherContacts} />
+        </div>
+      ) : null}
     </div>
   );
 };
